@@ -1,0 +1,26 @@
+@import "codemirror/lib/codemirror.css";
+@import "codemirror/theme/material.css";
+.CodeMirror {
+  text-align: left !important;
+  font-size: 15px !important;
+}
+
+.text_editor_toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.left_toolbar {
+  display: flex;
+  align-items: center;
+}
+.code_input {
+  margin-top: 7px;
+  height: 60px;
+  width: 350px;
+  resize: none;
+}
+.generate_flowchart_btn {
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
