@@ -1,26 +1,22 @@
-import "./App.css";
-import { useState } from "react";
-import TextEditor from "./textEditor/TextEditor";
-import Terminal from "./terminal/Terminal";
-import Header from "./components/header/Header";
-import Flowchart from "./flowchart/Flowchart";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect} from "react-router-dom";
+import Main from "./components/Main";
+import Signup from "./components/Singup";
+import Login from "./components/Login";
+import Homepage from "./components/homepage/Homepage";
 
-const App = () => {
-  const [output, setOutput] = useState("");
-  const [flowChartString, setFlowChartString] = useState("");
-  return (
-    <div className="App">
-      <Header />
-      <div className="text-editor-and-flowchart">
-        <TextEditor
-          setOutput={setOutput}
-          setFlowChartString={setFlowChartString}
-        />
-        <Flowchart flowChartString={flowChartString} />
-      </div>
-      <Terminal output={output} setOutput={setOutput} />
-    </div>
-  );
-};
+function App() {
+	const user = localStorage.getItem("token");
+
+	return (
+    <Router>
+      <Switch>
+      {user && <Route exact path='/' component={Homepage} />}
+			<Route path="/signup" component={Signup} />
+			<Route path="/login" component={Login} />
+      <Route exact path="/" render={() => (<Redirect to="/login" />)} /> 
+      </Switch>
+  </Router>
+	);
+}
 
 export default App;
