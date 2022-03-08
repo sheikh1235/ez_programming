@@ -1,3 +1,8 @@
+// import {
+//   NotificationContainer,
+//   NotificationManager,
+// } from "react-notifications";
+// import "react-notifications/lib/notifications.css";
 import { useState, useRef } from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import axios from "axios";
@@ -65,6 +70,28 @@ const TextEditor = (props) => {
     if (code) props.setFlowChartString(flowChartStringGenerator(code));
   };
 
+  const saveCode = async (e) => {
+    e.preventDefault();
+    try {
+			const url = "http://localhost:5000/api/code/save";
+      const data = {
+        code : code,
+        token : localStorage.getItem("token")
+      }
+			const { data: res } = await axios.post(url, data);
+      // NotificationManager.success("Code Saved");
+
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				console.log(error.response.data.message);
+			}
+		}
+  };
+
   return (
     <div>
       <CodeMirror
@@ -99,6 +126,13 @@ const TextEditor = (props) => {
           >
             Flowchart
           </GenerateFlowchartButton>
+          <SaveCodeButton
+            onClick={saveCode}
+            variant="contained"
+            endIcon={<SendIcon />}
+          >
+            Save Code
+          </SaveCodeButton>
         </div>
       </div>
 
@@ -110,6 +144,16 @@ const TextEditor = (props) => {
 // Following function changes the style of the convert to flowchart button.
 
 const GenerateFlowchartButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText("#d16620"),
+  backgroundColor: "#d16620",
+  fontWeight: "bold",
+  fontSize: "12px",
+  "&:hover": {
+    backgroundColor: "#c15e1d",
+  },
+}));
+
+const SaveCodeButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText("#d16620"),
   backgroundColor: "#d16620",
   fontWeight: "bold",

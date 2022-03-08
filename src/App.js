@@ -10,7 +10,7 @@ function App() {
 	return (
     <Router>
       <Switch>
-      {user && <Route exact path='/' component={Homepage} />}
+      {<Route exact path='/' component={Homepage} />}
 			<Route path="/signup" component={Signup} />
 			<Route path="/login" component={Login} />
       <Route exact path="/" render={() => (<Redirect to="/login" />)} /> 
