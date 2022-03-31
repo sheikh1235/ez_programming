@@ -5,6 +5,7 @@ import TextEditor from "../../textEditor/TextEditor";
 import Terminal from "../../terminal/Terminal";
 import Header from "../header/Header";
 import Flowchart from "../../flowchart/Flowchart";
+import AnimatedPointer from "../animatedPointer/AnimatedPointer";
 
 const Homepage = () => {
   const [output, setOutput] = useState("");
