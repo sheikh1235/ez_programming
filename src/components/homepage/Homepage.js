@@ -32,7 +32,7 @@ const Homepage = (props) => {
       })
       .then((res) => {
         console.log(res);
-        setCode({ ...Code, id: CodeId ,name: res.code_name, body: res.code_body });
+        setCode({ ...Code, id: res.data.id ,name: res.data.name, body: res.data.body });
       })
       .catch((err) => {
         console.log(err); 

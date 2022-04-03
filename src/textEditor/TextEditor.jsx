@@ -3,7 +3,7 @@
 //   NotificationManager,
 // } from "react-notifications";
 // import "react-notifications/lib/notifications.css";
-import { useState, useRef } from "react";
+import { useState, useRef , useEffect} from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import axios from "axios";
 import "./TextEditor.css";
@@ -20,18 +20,34 @@ require("codemirror/mode/clike/clike");
 
 const TextEditor = (props) => {
   const textEditorRef = useRef(null);
-  console.log('-->>', props.code.body)
-  const initialValue = props.code.body;
-  console.log('-->>>>>', initialValue)
 
-  const [code, setCode] = useState(props.code.body);
+  const [code, setCode] = useState({
+    id : "",
+    name: "",
+    body: ""
+  });
   const [input, setInput] = useState("");
+
+  useEffect(()=>{
+    if (props.code !== undefined)
+    {
+      setCode(prev=>{
+        return{
+          ...prev,
+          id:props.code.id,
+          name:props.code.name,
+          body: props.code.body
+        }
+      });
+    }
+  }, [props.code])
+
 
   const handleSubmit = async () => {
     console.log(code);
     axios
       .post("http://localhost:5000/run/", {
-        code: code,
+        code: code.body,
         input: input,
       })
       .then((res) => {
@@ -67,8 +83,9 @@ const TextEditor = (props) => {
     console.log(afterCursor);
   };
   const generateFlowChart = (e) => {
+    console.log(code)
     e.preventDefault();
-    if (code) props.setFlowChartString(flowChartStringGenerator(code));
+    if (code) props.setFlowChartString(flowChartStringGenerator(code.body));
   };
 
   const saveCode = async (e) => {
@@ -76,10 +93,21 @@ const TextEditor = (props) => {
     try {
 			const url = "http://localhost:5000/api/code/save";
       const data = {
-        code : code,
+        codeId : code.id,
+        codeName:code.name,
+        codeBody:code.body,
         token : localStorage.getItem("token")
       }
-			const { data: res } = await axios.post(url, data);
+      axios
+      .post(url, {
+        data: data,
+      })
+      .then((res) => {
+        const data = res.data;
+        console.log(data)
+      })
+      .catch((err) => {
+      });
       // NotificationManager.success("Code Saved");
 
 		} catch (error) {
@@ -97,14 +125,17 @@ const TextEditor = (props) => {
     <div>
       <CodeMirror
         ref={textEditorRef}
-        value={code}
+        value={code.body}
         options={{
           mode: "text/x-c++src",
           theme: "material",
           lineNumbers: true,
         }}
         onBeforeChange={(editor, data, value) => {
-          setCode(value);
+          setCode({...code,
+              body: value
+            }
+          )
         }}
       />
       <div className="text_editor_toolbar">
