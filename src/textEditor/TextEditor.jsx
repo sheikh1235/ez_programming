@@ -20,10 +20,11 @@ require("codemirror/mode/clike/clike");
 
 const TextEditor = (props) => {
   const textEditorRef = useRef(null);
-  const initialValue =
-    '#include<iostream>\n\nusing namespace std;\n\nint main()\n{\n  cout<<"Hello World";\n}';
+  console.log('-->>', props.code.body)
+  const initialValue = props.code.body;
+  console.log('-->>>>>', initialValue)
 
-  const [code, setCode] = useState(initialValue);
+  const [code, setCode] = useState(props.code.body);
   const [input, setInput] = useState("");
 
   const handleSubmit = async () => {

@@ -11,15 +11,12 @@ import Login from "./components/Login";
 import Homepage from "./components/homepage/Homepage";
 
 function App() {
-  const user = localStorage.getItem("token");
-
   return (
     <Router>
       <Switch>
-        {<Route exact path="/" component={Homepage} />}
+        {<Route path="/:CodeId?" component={Homepage} />}
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
-        <Route exact path="/" render={() => <Redirect to="/login" />} />
       </Switch>
     </Router>
   );
