@@ -1,11 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link , useHistory} from "react-router-dom";
 import styles from "./styles.module.css";
 
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });
-	const [error, setError] = useState("");
+	const [error, setError] = useState(false)
+	const [success, setSuccess] = useState(false)
+	const [message, setMessage] = useState("")
+
+	const navigate = useHistory();
 
 	const handleChange = ({ currentTarget: input }) => {
 		setData({ ...data, [input.name]: input.value });
@@ -14,17 +18,22 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://localhost:5000/api/auth";
+			const url = "http://localhost:5000/api/auth/signin";
 			const { data: res } = await axios.post(url, data);
 			localStorage.setItem("token", res.data);
-			window.location = "/";
+			setError(false);
+			setSuccess(true);
+			setMessage("Logged in!")
+			navigate.push("/")
 		} catch (error) {
 			if (
 				error.response &&
 				error.response.status >= 400 &&
 				error.response.status <= 500
 			) {
-				setError(error.response.data.message);
+				setSuccess(false);
+				setError(true);
+				setMessage(error.response.data.message)
 			}
 		}
 	};
@@ -53,7 +62,9 @@ const Login = () => {
 							required
 							className={styles.input}
 						/>
-						{error && <div className={styles.error_msg}>{error}</div>}
+						{error && (<div className={styles.error_msg1}>{message}</div>)}
+						{success && (<div className={styles.error_msg2}>{message}</div>)}
+
 						<button type="submit" className={styles.green_btn}>
 							Sign In
 						</button>

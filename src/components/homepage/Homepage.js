@@ -8,10 +8,12 @@ import Terminal from "../../terminal/Terminal";
 import Header from "../header/Header";
 import Flowchart from "../../flowchart/Flowchart";
 import AnimatedPointer from "../animatedPointer/AnimatedPointer";
+import { v4 as uuidv4 } from 'uuid';
 
 const Homepage = (props) => {
   const [output, setOutput] = useState("");
   const [flowChartString, setFlowChartString] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
   const [Code, setCode] = useState({
     id:'',
     name:'',
@@ -24,19 +26,31 @@ const Homepage = (props) => {
   useEffect(() => {
     if(CodeId === undefined)
     {
-      history.push(`/${1234}`);
+      history.push(`/${uuidv4()}`);
     }
     else{
+      const token = localStorage.getItem("token")
       axios
       .get(`http://localhost:5000/api/code/get${CodeId}`, {
+        params: {
+          token: token
+        }
       })
       .then((res) => {
         console.log(res);
+        setAuthenticated(true)
         setCode({ ...Code, id: res.data.id ,name: res.data.name, body: res.data.body });
+
       })
       .catch((err) => {
-        console.log(err); 
-        setCode({ ...Code, id: CodeId ,name: 'Untitled', body: raw });
+        console.log(err.response.status);
+        if( err.response.status === 405){
+          setAuthenticated(true)
+          setCode({ ...Code, id: CodeId ,name: 'Untitled', body: raw });
+        } 
+        else{
+          history.push('/login')
+        }
       });
     }
   }, []);
@@ -47,26 +61,26 @@ const Homepage = (props) => {
     window.location.reload();
   };
   return (
-    <div className="App">
-      {/* <Header /> */}
-      <div className="main_container">
-        <nav className="navbar">
-          <h1>EZ Programming</h1>
-          <button className="white_btn" onClick={handleLogout}>
-            Logout
-          </button>
-        </nav>
-      </div>
-      <div className="text-editor-and-flowchart">
-        <TextEditor
-          setOutput={setOutput}
-          setFlowChartString={setFlowChartString}
-          code = {Code}
-        />
-        <Flowchart flowChartString={flowChartString} />
-      </div>
-      <Terminal output={output} setOutput={setOutput} />
+    authenticated && (<div className="App">
+    {/* <Header /> */}
+    <div className="main_container">
+      <nav className="navbar">
+        <h1>EZ Programming</h1>
+        <button className="white_btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </nav>
     </div>
+    <div className="text-editor-and-flowchart">
+      <TextEditor
+        setOutput={setOutput}
+        setFlowChartString={setFlowChartString}
+        code = {Code}
+      />
+      <Flowchart flowChartString={flowChartString} />
+    </div>
+    <Terminal output={output} setOutput={setOutput} />
+  </div>)
   );
 };
 
