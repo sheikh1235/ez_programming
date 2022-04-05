@@ -43,13 +43,14 @@ const Homepage = (props) => {
 
       })
       .catch((err) => {
-        console.log(err.response.status);
-        if( err.response.status === 405){
+        if( err.response && err.response.status === 405){
           setAuthenticated(true)
           setCode({ ...Code, id: CodeId ,name: 'Untitled', body: raw });
         } 
         else{
-          history.push('/login')
+          // history.push('/login')
+          setAuthenticated(true)
+          setCode({ ...Code, id: CodeId ,name: 'Untitled', body: raw });
         }
       });
     }
