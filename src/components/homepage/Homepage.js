@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Homepage = (props) => {
   const [output, setOutput] = useState("");
   const [flowChartString, setFlowChartString] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   const [Code, setCode] = useState({
     id:'',
     name:'',
@@ -62,7 +62,7 @@ const Homepage = (props) => {
     window.location.reload();
   };
   return (
-    authenticated && (<div className="App">
+    authenticated ? (<div className="App">
     {/* <Header /> */}
     <div className="main_container">
       <nav className="navbar">
@@ -81,7 +81,11 @@ const Homepage = (props) => {
       <Flowchart flowChartString={flowChartString} />
     </div>
     <Terminal output={output} setOutput={setOutput} />
-  </div>)
+  </div>) : (
+    <h1>
+      Not authenticated                                
+    </h1>
+  )
   );
 };
 

@@ -1,8 +1,3 @@
-// import {
-//   NotificationContainer,
-//   NotificationManager,
-// } from "react-notifications";
-// import "react-notifications/lib/notifications.css";
 import { useState, useRef , useEffect} from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import axios from "axios";
@@ -120,6 +115,7 @@ const TextEditor = (props) => {
 			}
 		}
   };
+  
 
   return (
     <div>
