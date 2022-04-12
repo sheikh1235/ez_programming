@@ -66,7 +66,10 @@ const Homepage = (props) => {
     {/* <Header /> */}
     <div className="main_container">
       <nav className="navbar">
+        <div className="navbarrr">
         <h1>EZ Programming</h1>
+        <h3>My Codes</h3>
+        </div>
         <button className="white_btn" onClick={handleLogout}>
           Logout
         </button>
