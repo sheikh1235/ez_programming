@@ -444,6 +444,13 @@ const checkForLoop = (code) => {
   return 0;
 };
 
+const checkDoWhileLoop = (code) => {
+  if (code.substring(0, 2) === "do") {
+    return 1;
+  }
+  return 0;
+};
+
 const checkWhileLoop = (code) => {
   if (code.substring(0, 5) === "while") {
     return 1;
@@ -451,12 +458,56 @@ const checkWhileLoop = (code) => {
   return 0;
 };
 
-const checkDoWhileLoop = (code) => {
-  if (code.substring(0, 2) === "do") {
+const checkVoid = (code) => {
+  if (code.substring(0, 6) === "void") {
     return 1;
   }
   return 0;
 };
+
+const checkString = (code) => {
+  if (code.substring(0, 6) === "string") {
+    return 1;
+  }
+  return 0;
+};
+
+const checkBool = (code) => {
+  if (code.substring(0, 4) === "bool") {
+    return 1;
+  }
+  return 0;
+};
+
+const checkInt = (code) => {
+  if (code.substring(0, 3) === "int") {
+    return 1;
+  }
+  return 0;
+};
+
+const checkFloat = (code) => {
+  if (code.substring(0, 5) === "float") {
+    return 1;
+  }
+  return 0;
+};
+
+const checkLong = (code) => {
+  if (code.substring(0, 4) === "long") {
+    return 1;
+  }
+  return 0;
+};
+
+const checkDouble = (code) => {
+  if (code.substring(0, 6) === "double") {
+    return 1;
+  }
+  return 0;
+};
+
+
 
 class Code {
   constructor() {
@@ -551,6 +602,34 @@ class Function {
   getArrayOfNode() {
     return this.arrayOfNode;
   }
+}
+
+
+
+const detectFunction = (code) => {
+  let i = 0;
+  if(checkInt(code)){
+    i = 4;
+  }
+  else if(checkBool(code) || checkLong(code) || checkVoid(code)){
+    i = 6;
+  }
+  else if(checkFloat(code)){
+    i = 7;
+  }
+  else if(checkString(code) || checkDouble(code)){
+    i = 8;
+  }
+
+  for(; i < code.length; i++){
+    if((code.charCodeAt(i) >= 65 && code.charCodeAt(i) <= 90) || (code.charCodeAt(i) >= 97 && code.charCodeAt(i) <= 122)){
+      continue;
+    }
+    else{
+      break;
+    }
+  }
+  
 }
 
 const checkEndWithColon = (code) => {
@@ -770,6 +849,144 @@ const elseStatement = (myCode, func) => {
   }
 };
 
+const whileStatement = (myCode, func) => {
+  let node = new Node();
+  node.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex()]);
+  node.setType(3);
+  node.setEndPoint(func.getArrayOfNode().length + 1);
+  let endPoint = func.getArrayOfNode().length;
+  // Case 1: If doesn't have any statement
+  if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] === ";") {
+    node.setSpecificEndPoint(1, func.getArrayOfNode().length + 1);
+    if (typeof node !== "undefined") {
+      func.addNode(node);
+    }
+    myCode.incrementIndex();
+  }
+  // Case 2: Where If has some code in its block
+  else if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] !== ";") {
+    let lastNode;
+    if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] === "{") {
+      if (typeof node !== "undefined") {
+        func.addNode(node);
+      }
+      myCode.incrementIndex();
+      if (myCode.getIndex() < myCode.getArrayOfCode().length - 1) {
+        myCode.incrementIndex();
+        statements(myCode, func);
+      }
+      let arrayOfNode = func.getArrayOfNode();
+      node.setSpecificEndPoint(1, arrayOfNode.length);
+      lastNode = arrayOfNode[arrayOfNode.length - 1];
+      console.log(lastNode);
+    } else {
+      if (typeof node !== "undefined") {
+        func.addNode(node);
+      }
+      myCode.incrementIndex();
+      lastNode = new Node();
+      lastNode.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex()]);
+      if (checkInputOutput(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+        lastNode.setType(2);
+      } else if (
+        myCode.getArrayOfCode()[myCode.getIndex()] &&
+        myCode.getArrayOfCode()[myCode.getIndex()].length > 1
+      ) {
+        lastNode.setType(1);
+      } else if (checkIf(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+        lastNode.setType(3);
+        lastNode.setSpecificEndPoint(1, func.getArrayOfNode().length + 1);
+      }
+      func.addNode(lastNode);
+      myCode.incrementIndex();
+    }
+    myCode.incrementIndex();
+
+    lastNode.setSpecificEndPoint(0, endPoint);
+
+  }
+};
+
+const forStatement = (myCode, func) => {
+  let initializtion = new Node();
+  initializtion.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex()]);
+  initializtion.setType(1);
+  initializtion.setEndPoint(func.getArrayOfNode().length + 1);
+  if (typeof initializtion !== "undefined") {
+    func.addNode(initializtion);
+  }
+  myCode.incrementIndex();
+
+  
+  let increment = new Node();
+  increment.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex() + 1]);
+  increment.setType(1);
+  
+
+
+  let node = new Node();
+  node.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex()]);
+  node.setType(3);
+  node.setEndPoint(func.getArrayOfNode().length + 1);
+  let endPoint = func.getArrayOfNode().length;
+  myCode.incrementIndex();
+  // Case 1: If doesn't have any statement
+  if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] === ";") {
+    node.setSpecificEndPoint(1, func.getArrayOfNode().length + 1);
+    if (typeof node !== "undefined") {
+      func.addNode(node);
+    }
+    myCode.incrementIndex();
+  }
+  // Case 2: Where If has some code in its block
+  else if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] !== ";") {
+    let lastNode;
+    if (myCode.getArrayOfCode()[myCode.getIndex() + 1][0] === "{") {
+      if (typeof node !== "undefined") {
+        func.addNode(node);
+      }
+      myCode.incrementIndex();
+      if (myCode.getIndex() < myCode.getArrayOfCode().length - 1) {
+        myCode.incrementIndex();
+        statements(myCode, func);
+      }
+      let arrayOfNode = func.getArrayOfNode();
+      node.setSpecificEndPoint(1, arrayOfNode.length + 1);
+      lastNode = arrayOfNode[arrayOfNode.length - 1];
+      console.log(lastNode);
+    } else {
+      if (typeof node !== "undefined") {
+        func.addNode(node);
+      }
+      myCode.incrementIndex();
+      lastNode = new Node();
+      lastNode.setLineOfCode(myCode.getArrayOfCode()[myCode.getIndex()]);
+      if (checkInputOutput(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+        lastNode.setType(2);
+      } else if (
+        myCode.getArrayOfCode()[myCode.getIndex()] &&
+        myCode.getArrayOfCode()[myCode.getIndex()].length > 1
+      ) {
+        lastNode.setType(1);
+      } else if (checkIf(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+        lastNode.setType(3);
+        lastNode.setSpecificEndPoint(1, func.getArrayOfNode().length + 1);
+      }
+      func.addNode(lastNode);
+      myCode.incrementIndex();
+    }
+    myCode.incrementIndex();
+
+    lastNode.setSpecificEndPoint(0, func.getArrayOfNode().length);
+
+    increment.setEndPoint(endPoint);
+    if (typeof increment !== "undefined") {
+      func.addNode(increment);
+    }
+
+  }
+};
+
 const statements = (myCode, func) => {
   let node;
   let arrayOfCode = myCode.getArrayOfCode();
@@ -787,7 +1004,19 @@ const statements = (myCode, func) => {
     if (myCode.getIndex() < myCode.getArrayOfCode().length - 1) {
       statements(myCode, func);
     }
-  } else if (
+  } else if (checkWhileLoop(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+    whileStatement(myCode, func);
+    if (myCode.getIndex() < myCode.getArrayOfCode().length - 1) {
+      statements(myCode, func);
+    }
+  } 
+  else if (checkForLoop(myCode.getArrayOfCode()[myCode.getIndex()]) === 1) {
+    forStatement(myCode, func);
+    if (myCode.getIndex() < myCode.getArrayOfCode().length - 1) {
+      statements(myCode, func);
+    }
+  } 
+  else if (
     checkInputOutput(myCode.getArrayOfCode()[myCode.getIndex()]) === 1
   ) {
     node = new Node();
@@ -834,29 +1063,34 @@ const tokenizer = (myCode, func) => {
   statements(myCode, func);
 };
 
-const makingFlowchart = (index, arrayOfNode) => {
+const makingFlowchart = (index, arrayOfNode, termination) => {
   let codeString = "";
-
+  if(index == termination){
+    codeString = index + "->e"
+    return codeString;
+  }
+  console.log(index, termination);
   if (index < arrayOfNode.length) {
     if (arrayOfNode[index].getType() === 3) {
+      let temp = index;
       codeString += index + "\n";
       codeString += index + "(yes)->";
       codeString += makingFlowchart(
         arrayOfNode[index].getEndPoints()[0],
-        arrayOfNode
+        arrayOfNode, temp
       );
       codeString += "\n";
       codeString += index + "(no)->";
       codeString += makingFlowchart(
         arrayOfNode[index].getEndPoints()[1],
-        arrayOfNode
+        arrayOfNode, temp
       );
       codeString += "\n";
     } else {
       codeString += index + "->";
       codeString += makingFlowchart(
         arrayOfNode[index].getEndPoints()[0],
-        arrayOfNode
+        arrayOfNode, termination
       );
     }
   } else {
@@ -960,8 +1194,10 @@ export const flowChartStringGenerator = (inputCode) => {
   codeString += "st->";
 
   if (arrayOfNode.length > 0) {
-    codeString += makingFlowchart(0, arrayOfNode);
+    codeString += makingFlowchart(0, arrayOfNode, -1);
   } else codeString += "e";
+
+  console.log(codeString);
 
   return codeString;
 };
