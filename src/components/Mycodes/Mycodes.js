@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import LoadingScreen from "../loadingScreen/LoadingScreen";
 
 const getmyposts = (errorr, success) => {
   const token = localStorage.getItem("token");
@@ -22,7 +23,7 @@ const getmyposts = (errorr, success) => {
 
 const Mycodes = () => {
   const [codes, setCodes] = useState([]);
-  const [Loading, setLoading] = useState(true);
+  const [Loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     document.title = "Saved Codes"
@@ -35,29 +36,26 @@ const Mycodes = () => {
         console.log(success.data);
         setCodes(success.data.reverse());
         // setauthenticated(true);
-        setLoading(false)
+        setLoaded(true)
       }
     );
   }, []);
 
   return (
-    <div>
+    Loaded ? 
+    (<div>
       <Navbar />
 
-      { Loading ? (<> </>) : 
-
-      codes.map((a) => {
-
-        return(
+      {codes.map((a) => {
+      return (
         <div
           className="card w-75 mx-auto mt-5"
           style={{ borderColor: "#123d35" }}
         >
           <div className="card-body">
             <h5 className="">{a.name}</h5>
-            { a.description ? <> a </> : <> <p className="card-text">
-            With supporting text below as a natural lead-in to additional
-              content.   
+            <p className="card-text">
+            {a.desc} 
               <Link
                 to = {`/homepage/${a.id}`}
                 style={{
@@ -72,13 +70,14 @@ const Mycodes = () => {
                   style={{ color: "#123d35" }}
                 ></i>
               </Link>
-            </p> </>}
+            </p>
             
           </div>
-        </div>)
+        </div>
+      )
       })}
-
-    </div>
+    </div>)
+    : (<LoadingScreen/>)
   );
 };
 

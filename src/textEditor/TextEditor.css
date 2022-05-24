@@ -17,8 +17,24 @@
 }
 .code_input {
   margin-top: 7px;
-  height: 60px;
+  height: 62px;
   width: 350px;
+  resize: none;
+}
+.code_input_name0 {
+  height: 30px;
+  width:  75px;
+  resize: none;
+}
+.code_input_name1 {
+  height: 30px;
+  width:  175px;
+  resize: none;
+}
+.code_input_name2 {
+  margin-top: 2px;
+  height: 30px;
+  width:  250px;
   resize: none;
 }
 .generate_flowchart_btn {

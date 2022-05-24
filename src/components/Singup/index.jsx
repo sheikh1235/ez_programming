@@ -4,6 +4,7 @@ import { Link, useNavigate, useHistory } from "react-router-dom";
 import styles from "./styles.module.css";
 
 const Signup = () => {
+	document.title = "Sign up"
 	const [data, setData] = useState({
 		firstName: "",
 		lastName: "",

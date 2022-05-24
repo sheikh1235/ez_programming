@@ -4,6 +4,7 @@ import { Link , useHistory} from "react-router-dom";
 import styles from "./styles.module.css";
 
 const Login = () => {
+	document.title = "Login"
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState(false)
 	const [success, setSuccess] = useState(false)

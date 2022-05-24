@@ -20,19 +20,24 @@ const TextEditor = (props) => {
   const [code, setCode] = useState({
     id : "",
     name: "",
-    body: ""
+    body: "",
+    description: ""
   });
+  const [nameMissing, setnameMissing] = useState(false)
   const [input, setInput] = useState("");
   const [Loading, setLoading] = useState(false);
+  const [fileName, setfileName] = useState("");
 
   useEffect(()=>{
     if (props.code !== undefined)
     {
+      setfileName(props.code.name)
       setCode(prev=>{
         return{
           ...prev,
           id:props.code.id,
           name:props.code.name,
+          description:props.code.desc,
           body: props.code.body
         }
       });
@@ -40,6 +45,7 @@ const TextEditor = (props) => {
   }, [props.code])
 
 
+  //run the code
   const handleSubmit = async () => {
     console.log(code);
     axios
@@ -91,12 +97,18 @@ const TextEditor = (props) => {
 
   const saveCode = async (e) => {
     e.preventDefault();
+    if(fileName === "")
+    {
+      setnameMissing(true);
+      return;
+    }
     try {
 			const url = "http://localhost:5000/api/code/save";
       const data = {
         codeId : code.id,
-        codeName:code.name,
+        codeName:fileName,
         codeBody:code.body,
+        codeDesc:code.description,
         token : localStorage.getItem("token")
       }
       setLoading(true)
@@ -147,14 +159,40 @@ const TextEditor = (props) => {
           {editorToolbar(handleSubmit)}
           <textarea
             placeholder="Enter input here..."
-            className="code_input"
+            className="code_input form-control"
             onChange={(e) => {
               setInput(e.target.value);
             }}
             value={input}
           />
+          <div className="mx-2 mt-2">
+            <div className="d-flex flex-row">
+            <input className= {nameMissing ? ("code_input_name1 form-control is-invalid") : ( "code_input_name1 form-control")}  type="text"
+             placeholder="Filename"
+            onChange={(e) => {
+              setnameMissing(false);
+              setfileName(e.target.value);
+            }}
+            value={fileName}
+            />
+            <span class="input-group-text code_input_name0">.cpp</span>
+            </div>
+          
+            <input className = "code_input_name2 form-control" type = "text" placeholder="Description"
+            onChange={(e) => {
+              setCode({...code,
+                description: e.target.value
+              }
+            )
+            }}
+            value={code.description}
+            >
+            </input>
+            </div> 
         </div>
+        
         <div className="generate_flowchart_btn">
+        
           <GenerateFlowchartButton
             onClick={generateFlowChart}
             variant="contained"
