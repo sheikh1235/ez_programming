@@ -1,5 +1,5 @@
 import "./Homepage.css";
-import { useHistory,Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -17,24 +17,24 @@ const Homepage = (props) => {
   const [output, setOutput] = useState("");
   const [flowChartString, setFlowChartString] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
   const [Code, setCode] = useState({
     id: "",
     name: "",
     body: "",
-    desc: ""
+    desc: "",
   });
   let history = useHistory();
   const CodeId = props.match.params.CodeId;
 
-  const raw = '#include<iostream>\n\nusing namespace std;\n\nint main()\n{\n  cout<<"Hello World";\n}';
+  const raw =
+    '#include<iostream>\n\nusing namespace std;\n\nint main()\n{\n  cout<<"Hello World";\n}';
 
   useEffect(() => {
     if (CodeId === undefined) {
       history.push(`/homepage/${uuidv4()}`);
       window.location.reload();
-    } 
-    else {
+    } else {
       const token = localStorage.getItem("token");
       axios
         .get(`http://localhost:5000/api/code/get${CodeId}`, {
@@ -51,44 +51,50 @@ const Homepage = (props) => {
             name: res.data.name,
             body: res.data.body,
             desc: res.data.desc,
-
           });
-          setLoaded(true)
+          setLoaded(true);
         })
         .catch((err) => {
           if (err.response && err.response.status === 405) {
             setAuthenticated(true);
-            setCode({ ...Code, id: CodeId, name: "", body: raw , desc: ""});
-            setLoaded(true)
+            setCode({ ...Code, id: CodeId, name: "", body: raw, desc: "" });
+            setLoaded(true);
           } else {
             // history.push('/login')
             setAuthenticated(false);
             setCode({ ...Code, id: CodeId, name: "", body: raw, desc: "" });
-            setLoaded(true)
+            setLoaded(true);
           }
         });
-      }
+    }
   }, []);
 
-  return loaded ? (authenticated ? (
-    <div className="App">
-      {/* <Header /> */}
-      <div className="main_container">
-          <Navbar/>
-      </div>
-      <div className="">
-        <TextEditor
-          setOutput={setOutput}
-          setFlowChartString={setFlowChartString}
-          code={Code}
-        />
-      </div>
+  return loaded ? (
+    authenticated ? (
+      <div className="App">
+        {/* <Header /> */}
+        <div className="main_container">
+          <Navbar />
+        </div>
+        <div className="">
+          <TextEditor
+            setOutput={setOutput}
+            setFlowChartString={setFlowChartString}
+            code={Code}
+          />
+        </div>
+
         <Flowchart flowChartString={flowChartString} />
-      <Terminal output={output} setOutput={setOutput} />
-    </div>
+        <Terminal output={output} setOutput={setOutput} />
+      </div>
+    ) : (
+      <h1>Not authenticated</h1>
+    )
   ) : (
-    <h1>Not authenticated</h1>
-  )) : (<div><LoadingScreen/></div>);
+    <div>
+      <LoadingScreen />
+    </div>
+  );
 };
 
 export default Homepage;

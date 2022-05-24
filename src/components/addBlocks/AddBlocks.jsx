@@ -15,8 +15,9 @@ const AddBlocks = ({
       onClick={() => {
         addIfBlock(codeBlocks.ifBlock);
       }}
+      className= "btn"
     >
-      Add if block
+      If block
     </Button>
   );
 };

@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import { styled } from "@mui/material/styles";
 import AddBlocks from "../components/addBlocks/AddBlocks";
+
 import { flowChartStringGenerator } from "../flowchart-generator/flowchartGenerator";
 
 require("codemirror/mode/clike/clike");
@@ -191,7 +192,51 @@ const TextEditor = (props) => {
             </div> 
         </div>
         
-        <div className="generate_flowchart_btn">
+        <div className="generate_flowchart_btn d-flex flex-row">
+
+        <div className="dropup">
+          <button
+            className="btn btn-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-bs-expanded="false"
+          >
+            Helping code
+          </button>
+          <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li>
+              <a className="dropdown-item" href="#">
+              <AddBlocks addIfBlock={addIfBlock} />
+              </a>
+            </li>
+            <li>
+              <a className="dropdown-item" href="#" >
+                Submenu &raquo;
+              </a>
+              <ul className="dropdown-menu dropdown-submenu" >
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Submenu item 2
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Submenu item 3 &raquo;{" "}
+                  </a>
+                  <ul className="dropdown-menu dropdown-submenu">
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        Multi level 1
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+              </ul>
+            </li>
+          </ul>
+        </div>
         
           <GenerateFlowchartButton
             onClick={generateFlowChart}
@@ -217,7 +262,7 @@ const TextEditor = (props) => {
         </div>
       </div>
 
-      <AddBlocks addIfBlock={addIfBlock} />
+      
     </div>
   );
 };
@@ -228,6 +273,7 @@ const GenerateFlowchartButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText("#d16620"),
   backgroundColor: "#d16620",
   width: "130px",
+  marginLeft: "10px",
   fontWeight: "bold",
   fontSize: "12px",
   "&:hover": {
