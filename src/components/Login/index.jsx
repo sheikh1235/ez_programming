@@ -24,7 +24,7 @@ const Login = () => {
 			setError(false);
 			setSuccess(true);
 			setMessage("Logged in!")
-			navigate.push("/")
+			navigate.push("/homepage/")
 		} catch (error) {
 			if (
 				error.response &&

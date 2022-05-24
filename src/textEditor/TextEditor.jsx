@@ -2,6 +2,7 @@ import { useState, useRef , useEffect} from "react";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import axios from "axios";
 import "./TextEditor.css";
+import { scroller } from "react-scroll";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -22,6 +23,7 @@ const TextEditor = (props) => {
     body: ""
   });
   const [input, setInput] = useState("");
+  const [Loading, setLoading] = useState(false);
 
   useEffect(()=>{
     if (props.code !== undefined)
@@ -78,7 +80,11 @@ const TextEditor = (props) => {
     console.log(afterCursor);
   };
   const generateFlowChart = (e) => {
-    console.log(code)
+    scroller.scrollTo("generate_flowchart_btn", {
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
     e.preventDefault();
     if (code) props.setFlowChartString(flowChartStringGenerator(code.body));
   };
@@ -93,6 +99,7 @@ const TextEditor = (props) => {
         codeBody:code.body,
         token : localStorage.getItem("token")
       }
+      setLoading(true)
       axios
       .post(url, {
         data: data,
@@ -100,10 +107,11 @@ const TextEditor = (props) => {
       .then((res) => {
         const data = res.data;
         console.log(data)
+        setLoading(false)
       })
       .catch((err) => {
+        setLoading(false)
       });
-      // NotificationManager.success("Code Saved");
 
 		} catch (error) {
 			if (
@@ -154,13 +162,20 @@ const TextEditor = (props) => {
           >
             Flowchart
           </GenerateFlowchartButton>
-          <SaveCodeButton
+            {Loading ? (
+
+            <SaveCodeButton
+            onClick={saveCode}
+            variant="contained"
+          > <strong> ... </strong> </SaveCodeButton>
+          ) : 
+          (
+            <SaveCodeButton
             onClick={saveCode}
             variant="contained"
             endIcon={<SendIcon />}
-          >
-            Save Code
-          </SaveCodeButton>
+          > Save  </SaveCodeButton>
+          )}
         </div>
       </div>
 
@@ -174,6 +189,7 @@ const TextEditor = (props) => {
 const GenerateFlowchartButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText("#d16620"),
   backgroundColor: "#d16620",
+  width: "130px",
   fontWeight: "bold",
   fontSize: "12px",
   "&:hover": {
@@ -184,7 +200,10 @@ const GenerateFlowchartButton = styled(Button)(({ theme }) => ({
 const SaveCodeButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText("#d16620"),
   backgroundColor: "#d16620",
+  
+  width: "130px",
   fontWeight: "bold",
+  marginLeft: "10px",
   fontSize: "12px",
   "&:hover": {
     backgroundColor: "#c15e1d",
