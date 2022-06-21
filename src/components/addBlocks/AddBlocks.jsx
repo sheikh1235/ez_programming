@@ -1,5 +1,6 @@
 import { codeBlocks } from "../../data/CodeBlocks";
 import Button from "@mui/material/Button";
+import "./AddBlocks.css"
 
 const AddBlocks = ({
   addIfBlock,
@@ -11,14 +12,15 @@ const AddBlocks = ({
   addDoWhileLoop,
 }) => {
   return (
-    <Button
+    <button
+    
       onClick={() => {
         addIfBlock(codeBlocks.ifBlock);
       }}
-      className= "btn"
+      className= "btn btns1"
     >
-      If block
-    </Button>
+      IF BLOCK
+    </button>
   );
 };
 

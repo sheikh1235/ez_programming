@@ -1,24 +1,23 @@
- .btns2 {
+.btns1 {
     display: inline-block;
     position: relative;
-    color: #000;
+    color: #17a2b8;
   }
   
-  .btns2:after {
+  .btns1:after {
     content: '';
     position: absolute;
     width: 100%;
     transform: scaleX(0);
-    transform: scaleY(0);
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: #000;
+    background-color: #17a2b8;
     transform-origin: bottom right;
     transition: transform 0.25s ease-out;
   }
   
-  .btns2:hover:after {
+  .btns1:hover:after {
     transform: scaleX(1);
     transform-origin: bottom left;
   }

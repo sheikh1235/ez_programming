@@ -4,48 +4,42 @@ import { Link, useHistory } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 
-const getmyposts = (errorr, success) => {
-  const token = localStorage.getItem("token");
-  axios
-    .get("http://localhost:5000/api/code/myallcodes", {
-      params: {
-        token: token,
-      },
-    })
-    .then(function (res) {
-      console.log(res);
-      success(res);
-    })
-    .catch(function (err) {
-      errorr(err);
-    });
-};
-
-const Mycodes = () => {
-  const [codes, setCodes] = useState([]);
-  const [Loaded, setLoaded] = useState(false);
+const CodeSnippets = () => {
+  let codes = [
+    {
+      name: "Variables",
+      desc: "C++ program to show difference b/w definition and declaration of a variable",
+      id: "bab31234-d151-4604-96fc-a02527c65416"
+    },
+    {
+      name: "Loops - 1",
+      desc: "To illustrate the purpose of For Loops",
+      id: "4b07a1a6-6934-46f3-a2fa-b7058606b9f5"
+    },
+    {
+      name: "Loops - 2",
+      desc: "To illustrate the purpose of While loops",
+      id: "f8ef53fc-d846-445c-8df3-b0638cf04169"
+    },
+    {
+      name : "IF",
+      desc : "This file teaches the use of If as a decision making statement",
+      id : "e152a3db-9ebb-4dd6-863c-f60526526345"
+    },
+  ]
 
   useEffect(() => {
-    document.title = "Saved Codes"
-    getmyposts(
-      (error) => {
-        // setauthenticated(false);
-        // setLoaded(true)
-      },
-      (success) => {
-        console.log(success.data);
-        setCodes(success.data.reverse());
-        // setauthenticated(true);
-        setLoaded(true)
-      }
-    );
+    document.title = "Code Snippets"
   }, []);
 
   return (
-    Loaded ? 
-    (<div className="mb-5">
+  <div className="mb-5">
       <Navbar />
-
+      <div className="container mt-5">
+      <h2 style={{marginLeft: "50px", marginRight: "50px"}}>
+        These code snippets are covering explanation and examples of c++ basics
+      </h2>
+      </div>
       {codes.map((a) => {
       return (
         <div
@@ -76,9 +70,8 @@ const Mycodes = () => {
         </div>
       )
       })}
+
     </div>)
-    : (<LoadingScreen/>)
-  );
 };
 
-export default Mycodes;
+export default CodeSnippets;

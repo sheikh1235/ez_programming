@@ -196,7 +196,8 @@ const TextEditor = (props) => {
 
         <div className="dropup">
           <button
-            className="btn btn-primary dropdown-toggle"
+          title="Helping syntaxes"
+            className="btn btn-info dropdown-toggle"
             type="button"
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"
@@ -206,9 +207,9 @@ const TextEditor = (props) => {
           </button>
           <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li>
-              <a className="dropdown-item" href="#">
-              <AddBlocks addIfBlock={addIfBlock} />
-              </a>
+              <button className="dropdown-item">
+              <AddBlocks addIfBlock={addIfBlock}/>
+              </button>
             </li>
             <li>
               <a className="dropdown-item" href="#" >
@@ -239,6 +240,7 @@ const TextEditor = (props) => {
         </div>
         
           <GenerateFlowchartButton
+            title = "Generate Flowchart"
             onClick={generateFlowChart}
             variant="contained"
             endIcon={<SendIcon />}
@@ -248,6 +250,7 @@ const TextEditor = (props) => {
             {Loading ? (
 
             <SaveCodeButton
+            title = "Save code"
             onClick={saveCode}
             variant="contained"
           > <strong> ... </strong> </SaveCodeButton>

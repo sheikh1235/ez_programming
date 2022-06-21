@@ -88,7 +88,7 @@ const Homepage = (props) => {
         <Terminal output={output} setOutput={setOutput} />
       </div>
     ) : (
-      <h1>Not authenticated</h1>
+      <h1 className="center">Not authenticated Please <Link to="/login">Login </Link></h1>
     )
   ) : (
     <div>
