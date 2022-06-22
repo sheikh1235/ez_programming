@@ -6,6 +6,12 @@
   height: 400px;
 }
 
+.abc .css-i4bv87-MuiSvgIcon-root {
+  user-select: none;
+  fill: #197a69 !important;
+  font-size: 3.5rem !important;
+}
+
 .text_editor_toolbar {
   display: flex;
   justify-content: space-between;
@@ -60,7 +66,6 @@
   .absolpos{
     position: absolute;
   top: 380px;
-  right: 0;
   width: inherit;
   height: inherit;
   }

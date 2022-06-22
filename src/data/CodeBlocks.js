@@ -1,11 +1,9 @@
 const codeBlocks = {
-  ifBlock: ["if(  ){", "\t", "}"],
-  elseBlock: "else{}",
-  elseIfBlock: "else if(){}",
-  ifElseBlock: "if(){\n}\nelse{\n}",
-  whileLoop: "while(){}",
-  doWhileLoop: "do{\n}\nwhile(){\n}",
-  forLoop: "for( ; ; ){\n}",
+  ifBlock: "  if( /*condition*/ ){\n  }",
+  elseIfBlock: "  else if( /*condition*/ ){\n  }",
+  ifElseBlock: "  if( /*condition*/ ){\n  } else{\n  }",
+  whileLoop: "  while( /*condition*/ ){\n   /*iterator*/\n  }",
+  forLoop: "  for( /*intialization*/ ; /*condition*/ ; /*iterator*/ ){\n  }",
 };
 
-module.exports.codeBlocks = codeBlocks;
+module.exports.codeBlocks = codeBlocks

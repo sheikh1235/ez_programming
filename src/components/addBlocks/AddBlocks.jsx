@@ -1,26 +1,16 @@
-import { codeBlocks } from "../../data/CodeBlocks";
-import Button from "@mui/material/Button";
 import "./AddBlocks.css"
+import Button from "@mui/material/Button";
 
-const AddBlocks = ({
-  addIfBlock,
-  addElseBlock,
-  addElseIfBlock,
-  addIfElseBlock,
-  addForLoop,
-  addWhileLoop,
-  addDoWhileLoop,
-}) => {
+const AddBlocks = ({ block, name, addBlock }) => {
   return (
-    <button
-    
+    <Button
       onClick={() => {
-        addIfBlock(codeBlocks.ifBlock);
+        addBlock(block);
       }}
-      className= "btn btns1"
+      className="btn btns1"
     >
-      IF BLOCK
-    </button>
+      {name}
+    </Button>
   );
 };
 

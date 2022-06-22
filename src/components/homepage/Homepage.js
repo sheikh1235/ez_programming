@@ -18,6 +18,7 @@ const Homepage = (props) => {
   const [flowChartString, setFlowChartString] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [showFC, setshowFC] = useState(false);
   const [Code, setCode] = useState({
     id: "",
     name: "",
@@ -80,12 +81,16 @@ const Homepage = (props) => {
           <TextEditor
             setOutput={setOutput}
             setFlowChartString={setFlowChartString}
+            setshowFC = {setshowFC}
             code={Code}
           />
         </div>
-
-        <Flowchart flowChartString={flowChartString} />
+        {
+          showFC && (<Flowchart flowChartString={flowChartString} />)
+        }
+        <div className="mt-5">
         <Terminal output={output} setOutput={setOutput} />
+        </div>
       </div>
     ) : (
       <h1 className="center">Not authenticated Please <Link to="/login">Login </Link></h1>
