@@ -69,7 +69,11 @@ const Login = () => {
 						<button type="submit" className={styles.green_btn}>
 							Sign In
 						</button>
+						
 					</form>
+					<Link style={{color: "#3bb19b", textDecoration: "underline"}} className="float-right" to="/adminlogin">
+						Login as Admin
+					</Link>
 				</div>
 				<div className={styles.right}>
 					<h1>New Here ?</h1>

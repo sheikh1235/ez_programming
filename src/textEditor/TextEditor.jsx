@@ -4,7 +4,15 @@ import axios from "axios";
 import "./TextEditor.css";
 import { scroller } from "react-scroll";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import LoadingButton from '@mui/lab/LoadingButton';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
+import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
+import NextPlanIcon from '@mui/icons-material/NextPlan';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import Tooltip from "@mui/material/Tooltip";
+import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
@@ -20,7 +28,7 @@ const TextEditor = (props) => {
   const textEditorRef = useRef(null);
 
   const [FCstatus, setFCstatus] = useState(false);
-
+  const [startDebug, setstartDebug] = useState(false);
   const [code, setCode] = useState({
     id: "",
     name: "",
@@ -48,12 +56,92 @@ const TextEditor = (props) => {
   }, [props.code]);
 
   //run the code
-  const handleSubmit = async () => {
+  const RunTheCode = async () => {
     console.log(code);
     axios
-      .post("http://localhost:5000/run/", {
+      .post("http://localhost:5000/run", {
         code: code.body,
         input: input,
+      })
+      .then((res) => {
+        const data = res.data;
+
+        props.setOutput(data.output);
+      })
+      .catch((err) => {
+        props.setOutput(err.message);
+      });
+  };
+  const DebugTheCode = async () => {
+    console.log(code);
+    let breakpoint = 8;
+    setstartDebug(true)
+    axios
+      .post("http://localhost:5000/debug", {
+        code: code.body,
+        // line number
+        breakpoint: breakpoint,
+      })
+      .then((res) => {
+        const data = res.data.output;
+        console.log(data)
+        props.setOutput(data);
+      })
+      .catch((err) => {
+        props.setOutput(err.message);
+      });
+  };
+  const StopTheDebugging = async () => {
+    console.log(code);
+    setstartDebug(false)
+    axios
+      .get("http://localhost:5000/end", {
+      })
+      .then((res) => {
+        const data = res.data;
+
+        props.setOutput(data.output);
+      })
+      .catch((err) => {
+        props.setOutput(err.message);
+      });
+  };
+
+  const PauseTheDebugging = async () => {
+    console.log('Debugging paused');
+    // axios
+    //   .post("http://localhost:5000/run/", {
+    //     code: code.body,
+    //     input: input,
+    //   })
+    //   .then((res) => {
+    //     const data = res.data;
+
+    //     props.setOutput(data.output);
+    //   })
+    //   .catch((err) => {
+    //     props.setOutput(err.message);
+    //   });
+  };
+
+  const StepTheNextLine = async () => {
+    console.log(code);
+    axios
+      .get("http://localhost:5000/next", {
+      })
+      .then((res) => {
+        const data = res.data;
+        props.setOutput(data.infoLocals);
+      })
+      .catch((err) => {
+        props.setOutput(err.message);
+      });
+  };
+
+  const ResumeTheDebugging = async () => {
+    console.log(code);
+    axios
+      .get("http://localhost:5000/next", {
       })
       .then((res) => {
         const data = res.data;
@@ -147,7 +235,8 @@ const TextEditor = (props) => {
       />
       <div className="text_editor_toolbar mx-1">
         <div className="left_toolbar">
-          {editorToolbar(handleSubmit)}
+          {editorToolbar(RunTheCode)}
+          {DebuggerButton(DebugTheCode)}
           <textarea
             placeholder="Enter input here..."
             className="code_input form-control"
@@ -191,11 +280,12 @@ const TextEditor = (props) => {
           <div className="dropup">
             <button
               title="Helping syntaxes"
-              className="btn btn-info dropdown-toggle"
+              className="btn dropdown-toggle"
               type="button"
               id="dropdownMenuButton"
               data-bs-toggle="dropdown"
               aria-bs-expanded="false"
+              style={{backgroundColor: "#d16620", color: "#FFF"}}
             >
               Helping code
             </button>
@@ -276,9 +366,9 @@ const TextEditor = (props) => {
               onClick={saveCode}
               variant="contained"
             >
-              {" "}
-              <strong> ... </strong>{" "}
+              <i class="fa-2x fas fa-spinner fa-spin"></i>
             </SaveCodeButton>
+
           ) : (
             <SaveCodeButton
               onClick={saveCode}
@@ -291,6 +381,14 @@ const TextEditor = (props) => {
           )}
         </div>
       </div>
+      {startDebug &&
+      (<div className="text-center mt-3" style={{marginRight: "150px"}}>
+      {StepNextLineButton(StepTheNextLine)}
+      {PauseDebuggingButton(PauseTheDebugging)}
+      {ResumeDebuggingButton(ResumeTheDebugging)}
+      {StopDebuggingButton(StopTheDebugging)}
+      </div>
+)}
     </div>
   );
 };
@@ -324,13 +422,79 @@ const SaveCodeButton = styled(Button)(({ theme }) => ({
 
 const editorToolbar = (handleSubmit) => {
   return (
-    <Tooltip title="Compile & Run" className="abc">
+    <Tooltip title="Compile & Run" className="runbtn">
       <IconButton
         onClick={() => {
           handleSubmit();
         }}
       >
         <PlayCircleFilledIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+const DebuggerButton = (handleSubmit) => {
+  return (
+    <Tooltip title="Start Debugging" className="dbgbtn">
+      <IconButton
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        <ArrowDropDownCircleIcon />
+        {/* <i className="fa-1x fas fa-cog fa-spin" style={{color: "#c78624"}}></i> */}
+      </IconButton>
+    </Tooltip>
+  );
+};
+const StopDebuggingButton = (handleSubmit) => {
+  return (
+    <Tooltip title="Stop Debugging" className="stpdbgbtn">
+      <IconButton
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        <StopCircleOutlinedIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+const StepNextLineButton = (handleSubmit) => {
+  return (
+    <Tooltip title="Step Next Line" className="nxtlnbtn">
+      <IconButton
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        <NextPlanOutlinedIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+const PauseDebuggingButton = (handleSubmit) => {
+  return (
+    <Tooltip title="Pause Debugging" className="psdbgbtn">
+      <IconButton
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        <PauseCircleOutlineIcon/>
+      </IconButton>
+    </Tooltip>
+  );
+};
+const ResumeDebuggingButton = (handleSubmit) => {
+  return (
+    <Tooltip title="Pause Debugging" className="psdbgbtn">
+      <IconButton
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        <AutorenewIcon/>
       </IconButton>
     </Tooltip>
   );

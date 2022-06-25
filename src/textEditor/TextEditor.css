@@ -6,10 +6,30 @@
   height: 400px;
 }
 
-.abc .css-i4bv87-MuiSvgIcon-root {
+.runbtn .css-i4bv87-MuiSvgIcon-root {
   user-select: none;
   fill: #197a69 !important;
-  font-size: 3.5rem !important;
+  font-size: 3.0rem !important;
+}
+.dbgbtn .css-i4bv87-MuiSvgIcon-root {
+  user-select: none;
+  fill: #c78624 !important;
+  font-size: 2.5rem !important;
+}
+.stpdbgbtn .css-i4bv87-MuiSvgIcon-root {
+  user-select: none;
+  fill: #940606 !important;
+  font-size: 2.5rem !important;
+}
+.nxtlnbtn .css-i4bv87-MuiSvgIcon-root {
+  user-select: none;
+  fill: #528609 !important;
+  font-size: 2.5rem !important;
+}
+.psdbgbtn .css-i4bv87-MuiSvgIcon-root {
+  user-select: none;
+  fill: #8a8a04 !important;
+  font-size: 2.5rem !important;
 }
 
 .text_editor_toolbar {

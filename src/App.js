@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Homepage from "./components/homepage/Homepage";
 import Mycodes from "./components/Mycodes/Mycodes";
 import CodeSnippets from "./components/codeSnippets/CodeSnippets";
+import adminLogin from "./admin/signup"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/codesnippets" component={CodeSnippets} />
         <Route exact path="/signup" component={Signup} />
         <Route path="/homepage/:CodeId?" component={Homepage} />
+        <Route path="/adminlogin" component={adminLogin} />
       </Switch>
     </Router>
   );
