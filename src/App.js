@@ -5,13 +5,19 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import Main from "./components/Main";
 import Signup from "./components/Singup";
 import Login from "./components/Login";
 import Homepage from "./components/homepage/Homepage";
 import Mycodes from "./components/Mycodes/Mycodes";
+
 import CodeSnippets from "./components/codeSnippets/CodeSnippets";
-import adminLogin from "./admin/signup"
+
+import Nav from "./admin/Nav";
+import Footer from "./admin/Footer";
+import AddProduct from "./admin/AddUser";
+import ProductList from "./admin/UsersList";
+import UpdateProduct from "./admin/UpdateComponent";
+import "./App.css";
 
 function App() {
   return (
@@ -22,7 +28,9 @@ function App() {
         <Route path="/codesnippets" component={CodeSnippets} />
         <Route exact path="/signup" component={Signup} />
         <Route path="/homepage/:CodeId?" component={Homepage} />
-        <Route path="/adminlogin" component={adminLogin} />
+        <Route exact path="/admin/newuser" component={AddProduct} />
+        <Route exact path="/admin" component={ProductList} />
+        <Route exact path="/admin/user/:id" component={UpdateProduct} />
       </Switch>
     </Router>
   );
