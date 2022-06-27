@@ -45,7 +45,17 @@ const Mycodes = () => {
     Loaded ? 
     (<div className="mb-5">
       <Navbar />
+      
+      {(codes.length == 0) && (<div 
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        minHeight: "100vh",}}
 
+      > <p style={{fontSize: "35px"}}>Whooops!! Nothing Found :(</p> </div>)}
+      
       {codes.map((a) => {
       return (
         <div

@@ -1,25 +1,20 @@
 import React from "react";
+import logo from "../title_logo-removebg-preview.png";
 import { Link, useNavigate } from "react-router-dom";
 const Nav = () => {
   return (
-    <div>
-      <img
-        alt="logo"
-        className="logo"
-        src="https://png.pngtree.com/png-vector/20191125/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_2035379.jpg"
-      />{" "}
+    <div className="flex-column">
+      <div className="text-center text-white" style={{fontSize: "25px"}}>
+        Admin Panel
+      </div>
       {
-        <ul className="nav-ul">
-          <li>
-            <Link to="/admin"> Users </Link>{" "}
+        <ul className="nav-ul" style={{backgroundColor: "#3bb19b"}}>
+          <li >
+            <Link to="/admin"> <u>Users</u> </Link>{" "}
           </li>{" "}
           <li>
-            <Link to="/admin/newuser"> Add Users </Link>{" "}
+            <Link to="/admin/newuser"> <u>Add Users</u> </Link>{" "}
           </li>{" "}
-          {/*
-                                              <li>
-                                                <Link to="/update"> Update Users</Link>
-                                          </li>*/}{" "}
         </ul>
       }{" "}
     </div>

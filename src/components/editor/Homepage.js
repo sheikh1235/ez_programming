@@ -33,7 +33,7 @@ const Homepage = (props) => {
 
   useEffect(() => {
     if (CodeId === undefined) {
-      history.push(`/homepage/${uuidv4()}`);
+      history.push(`/editor/${uuidv4()}`);
       window.location.reload();
     } else {
       const token = localStorage.getItem("token");

@@ -1,8 +1,10 @@
 import React from "react";
 import Nav from "./Nav";
+import { Link , useHistory} from "react-router-dom";
 import Footer from "./Footer";
 
 const AddUser = () => {
+  const navigate = useHistory();
   const [firstName, setfirstName] = React.useState("");
   const [lastName, setlastName] = React.useState("");
   const [email, setemail] = React.useState("");
@@ -22,18 +24,21 @@ const AddUser = () => {
         "Content-type": "application/json",
       },
     });
+    navigate.push("/admin")
     result = await result.json();
     console.warn(result);
   };
 
   return (
     <div className="App">
-      <Nav />
-      <div className="product">
+      <div  style={{backgroundColor: "#3bb19b"}}>
+      <Nav/>
+      </div>
+      <div className="product mt-4">
         <h1> Add User </h1>{" "}
         <input
           type="text"
-          placeholder="Enter First name"
+          placeholder="First name"
           className="inputBox"
           value={firstName}
           onChange={(e) => {
@@ -45,7 +50,7 @@ const AddUser = () => {
         )}
         <input
           type="text"
-          placeholder="Enter Last Name"
+          placeholder="Last Name"
           className="inputBox"
           value={lastName}
           onChange={(e) => {
@@ -57,7 +62,7 @@ const AddUser = () => {
         )}
         <input
           type="text"
-          placeholder="Enter Email"
+          placeholder="Email"
           className="inputBox"
           value={email}
           onChange={(e) => {
@@ -69,7 +74,7 @@ const AddUser = () => {
         )}
         <input
           type="text"
-          placeholder="Enter Password"
+          placeholder="Password"
           className="inputBox"
           value={password}
           onChange={(e) => {
@@ -79,7 +84,7 @@ const AddUser = () => {
         {error && !password && (
           <span className="invalid-input"> Enter valid Password </span>
         )}
-        <button onClick={addUser} className="appButton">
+        <button onClick={addUser} className="appButton text-white" style={{backgroundColor: "#3bb19b"}}>
           Add User
         </button>
       </div>

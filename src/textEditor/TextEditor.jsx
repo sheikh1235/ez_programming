@@ -5,8 +5,6 @@ import "./TextEditor.css";
 import { scroller } from "react-scroll";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
-import LoadingButton from "@mui/lab/LoadingButton";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
@@ -19,14 +17,15 @@ import SendIcon from "@mui/icons-material/Send";
 import { styled } from "@mui/material/styles";
 import AddBlocks from "../components/addBlocks/AddBlocks";
 import { codeBlocks } from "../data/CodeBlocks";
+import { makeMarker } from "../components/marker/Marker";
 
 import { flowChartStringGenerator } from "../flowchart-generator/flowchartGenerator";
 
 require("codemirror/mode/clike/clike");
 
 const TextEditor = (props) => {
-  const textEditorRef = useRef(null);
 
+  const textEditorRef = useRef(null);
   const [FCstatus, setFCstatus] = useState(false);
   const [currentLine, setcurrentLine] = useState(0);
   const [nextLineLoading, setnextLineLoading] = useState(false);
@@ -45,6 +44,7 @@ const TextEditor = (props) => {
   const [Loading, setLoading] = useState(false);
   const [fileName, setfileName] = useState("");
   const [instance, setinstance] = useState(null);
+  const [breakpoint, setbreakpoint] = useState(-1);
 
   useEffect(() => {
     if (props.code !== undefined) {
@@ -64,9 +64,9 @@ const TextEditor = (props) => {
   const sliceIt = (data) => {
     let myArray = data.split("\n");
     let last = myArray.pop();
-    console.log('l->', last)
-    let k = "(gdb) "
-    if (last.localeCompare(k) == 0){
+    console.log("l->", last);
+    let k = "(gdb) ";
+    if (last.localeCompare(k) == 0) {
       setdebugInfo(myArray);
     }
   };
@@ -87,23 +87,21 @@ const TextEditor = (props) => {
       });
   };
   const DebugTheCode = async () => {
-    console.log(code);
-    let breakpoint = 8;
     setdebuggerLoading(true);
+    console.log('breakpoint->',breakpoint)
     axios
       .post("http://localhost:5000/debug", {
         code: code.body,
         // line number
-        breakpoint: breakpoint,
+        breakpoint: breakpoint + 1,
       })
       .then((res) => {
         const data = res.data.output;
-        console.log(data);
         // props.setOutput(data);
-        console.log(data)
+        console.log(data);
         sliceIt(data);
         setdebuggerLoading(false);
-        setcurrentLine(0);
+        setcurrentLine(breakpoint);
         setstartDebug(true);
       })
       .catch((err) => {
@@ -128,19 +126,6 @@ const TextEditor = (props) => {
 
   const PauseTheDebugging = async () => {
     console.log("Debugging paused");
-    // axios
-    //   .post("http://localhost:5000/run/", {
-    //     code: code.body,
-    //     input: input,
-    //   })
-    //   .then((res) => {
-    //     const data = res.data;
-
-    //     props.setOutput(data.output);
-    //   })
-    //   .catch((err) => {
-    //     props.setOutput(err.message);
-    //   });
   };
 
   const StepTheNextLine = async () => {
@@ -151,10 +136,10 @@ const TextEditor = (props) => {
       .then((res) => {
         const data = res.data;
         console.log(data.infoLocals);
+        setcurrentLine(data.nextLine.split("\n")[0].split(" ")[0] - 1)
         // props.setOutput(data.infoLocals);
         sliceIt(data.infoLocals);
         setnextLineLoading(false);
-        setcurrentLine(currentLine + 1);
       })
       .catch((err) => {
         props.setOutput(err.message);
@@ -189,7 +174,10 @@ const TextEditor = (props) => {
     //insert the block
     textEditorRef.current.editor.replaceRange(block, cursorPos);
     textEditorRef.current.editor.focus();
-    autoIndent();
+
+    setTimeout(() => {
+      autoIndent();
+    }, 10);
   };
   const generateFlowChart = (e) => {
     if (FCstatus) {
@@ -259,6 +247,23 @@ const TextEditor = (props) => {
         }}
         onBeforeChange={(editor, data, value) => {
           setCode({ ...code, body: value });
+        }}
+        onGutterClick={(editor, lineNumber, gutter, event) => {
+          const info = editor.lineInfo(lineNumber);
+          if (info.gutterMarkers) {
+            console.log('cp1')
+            setbreakpoint(-1);
+          } else {
+            console.log('cp2')
+            editor.clearGutter(gutter);
+            setbreakpoint(lineNumber);
+          }
+
+          editor.setGutterMarker(
+            lineNumber,
+            gutter,
+            info.gutterMarkers ? null : makeMarker()
+          );
         }}
       />
       <div className="text_editor_toolbar mx-1">
@@ -443,7 +448,9 @@ const TextEditor = (props) => {
           >
             <p className="mr-3">Current Line </p>
             <i className="fa fa-arrow-right mt-1" aria-hidden="true"></i>
-            <p className="ms-3 font-weight-bold">{instance.getLine(currentLine)}</p>
+            <p className="ms-3 font-weight-bold">
+              {instance.getLine(currentLine)}
+            </p>
           </div>
           <div className="mt-3 d-flex justify-content-center">
             {symbolTable(debugInfo)}
@@ -556,7 +563,10 @@ const StepNextLineButton = (handleSubmit, nextLineLoading) => {
         }}
       >
         {nextLineLoading ? (
-          <i style={{ color: "#528609" }} className="fas fa-circle-notch fa-spin"></i>
+          <i
+            style={{ color: "#528609" }}
+            className="fas fa-circle-notch fa-spin"
+          ></i>
         ) : (
           <NextPlanOutlinedIcon />
         )}

@@ -32,6 +32,11 @@ const Navbar = () => {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
+        <li className="nav-item active">
+            <Link className="nav-link btns2" to="/editor">
+              Code Editor <span className="sr-only">(current)</span>
+            </Link>
+          </li>
           <li className="nav-item active">
             <Link className="nav-link btns2" to="/mycodes">
               Saved Codes <span className="sr-only">(current)</span>
@@ -40,6 +45,11 @@ const Navbar = () => {
           <li className="nav-item active">
             <Link className="nav-link btns2" to="/codesnippets">
               Code Snippets <span className="sr-only">(current)</span>
+            </Link>
+          </li>
+          <li className="nav-item active">
+            <Link className="nav-link btns2" to="/about">
+              About <span className="sr-only">(current)</span>
             </Link>
           </li>
         </ul>

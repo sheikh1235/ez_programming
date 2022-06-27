@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link , useHistory} from "react-router-dom";
 import styles from "./styles.module.css";
 
-const Login = () => {
+const Signin = () => {
 	document.title = "Login"
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState(false)
@@ -18,24 +18,18 @@ const Login = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		try {
-			const url = "http://localhost:5000/api/auth/signin";
-			const { data: res } = await axios.post(url, data);
-			localStorage.setItem("token", res.data);
+		if (data.email.localeCompare("admin@xyz.com") == 0 && data.password.localeCompare("asd123") == 0)
+		{
 			setError(false);
 			setSuccess(true);
 			setMessage("Logged in!")
-			navigate.push("/editor")
-		} catch (error) {
-			if (
-				error.response &&
-				error.response.status >= 400 &&
-				error.response.status <= 500
-			) {
-				setSuccess(false);
-				setError(true);
-				setMessage(error.response.data.message)
-			}
+			navigate.push("/admin")
+		}
+		else{
+			setSuccess(false);
+			setError(true);
+			setMessage("Invalid Email or Password")
+
 		}
 	};
 
@@ -44,7 +38,7 @@ const Login = () => {
 			<div className={styles.login_form_container}>
 				<div className={styles.left}>
 					<form className={styles.form_container} onSubmit={handleSubmit}>
-						<h1>Login to Your Account</h1>
+						<h1>Login to Your Admin Account</h1>
 						<input
 							type="email"
 							placeholder="Email"
@@ -67,25 +61,14 @@ const Login = () => {
 						{success && (<div className={styles.error_msg2}>{message}</div>)}
 
 						<button type="submit" className={styles.green_btn}>
-							Sign In
+							Sign In as Admin
 						</button>
 						
 					</form>
-					<Link style={{color: "#3bb19b", textDecoration: "underline"}} className="float-right" to="/adminlogin">
-						Login as Admin
-					</Link>
-				</div>
-				<div className={styles.right}>
-					<h1>New Here ?</h1>
-					<Link to="/signup">
-						<button type="button" className={styles.white_btn}>
-							Sign Up
-						</button>
-					</Link>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default Login;
+export default Signin;
